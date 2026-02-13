@@ -1,0 +1,1 @@
+{\n  "name": "badminton-booking-web",\n  "private": true,\n  "workspaces": [\n    "frontend/",\n    "backend/"\n  ]\n}
