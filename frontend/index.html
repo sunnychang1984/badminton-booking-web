@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>羽球訂場系統 - Badminton Booking</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>&#127992; 羽球訂場系統</h1>
+            <p>Badminton Booking System</p>
+        </div>
+    </header>
+
+    <nav>
+        <button class="nav-btn active" data-tab="events">活動管理</button>
+        <button class="nav-btn" data-tab="members">會員管理</button>
+        <button class="nav-btn" data-tab="registrations">報名 / 簽到</button>
+        <button class="nav-btn" data-tab="pairings">智慧配對</button>
+    </nav>
+
+    <main>
+        <!-- Events Tab -->
+        <section id="events" class="tab-content active">
+            <div class="section-header">
+                <h2>活動管理</h2>
+                <button class="btn-primary" onclick="showModal('eventModal')">+ 新增活動</button>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>活動名稱</th>
+                            <th>日期</th>
+                            <th>地點</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="eventsTableBody">
+                        <tr class="empty-row">
+                            <td colspan="5">尚無活動資料，請點擊「新增活動」建立</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Members Tab -->
+        <section id="members" class="tab-content">
+            <div class="section-header">
+                <h2>會員管理</h2>
+                <button class="btn-primary" onclick="showModal('memberModal')">+ 新增會員</button>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>姓名</th>
+                            <th>Email</th>
+                            <th>缺席次數</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="membersTableBody">
+                        <tr class="empty-row">
+                            <td colspan="5">尚無會員資料，請點擊「新增會員」建立</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Registrations Tab -->
+        <section id="registrations" class="tab-content">
+            <div class="section-header">
+                <h2>報名 / 簽到</h2>
+            </div>
+            <div class="card-grid">
+                <div class="card">
+                    <h3>活動報名</h3>
+                    <form id="registerForm">
+                        <div class="form-group">
+                            <label for="regEventId">活動 ID</label>
+                            <input type="number" id="regEventId" placeholder="輸入活動 ID" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="regUserId">會員 ID</label>
+                            <input type="number" id="regUserId" placeholder="輸入會員 ID" required>
+                        </div>
+                        <button type="submit" class="btn-primary">報名</button>
+                    </form>
+                </div>
+                <div class="card">
+                    <h3>簽到</h3>
+                    <form id="checkinForm">
+                        <div class="form-group">
+                            <label for="checkinEventId">活動 ID</label>
+                            <input type="number" id="checkinEventId" placeholder="輸入活動 ID" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="checkinUserId">會員 ID</label>
+                            <input type="number" id="checkinUserId" placeholder="輸入會員 ID" required>
+                        </div>
+                        <button type="submit" class="btn-primary">簽到</button>
+                    </form>
+                </div>
+                <div class="card">
+                    <h3>出席查詢</h3>
+                    <form id="attendanceForm">
+                        <div class="form-group">
+                            <label for="attendanceEventId">活動 ID</label>
+                            <input type="number" id="attendanceEventId" placeholder="輸入活動 ID" required>
+                        </div>
+                        <button type="submit" class="btn-primary">查詢</button>
+                    </form>
+                    <div id="attendanceResult" class="result-box"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pairings Tab -->
+        <section id="pairings" class="tab-content">
+            <div class="section-header">
+                <h2>智慧配對</h2>
+            </div>
+            <div class="card-grid">
+                <div class="card">
+                    <h3>均衡配對</h3>
+                    <p class="card-desc">根據球員實力進行均衡分組，讓每場比賽更有競爭性。</p>
+                    <div class="form-group">
+                        <label for="balancedPlayers">球員名單 (以逗號分隔)</label>
+                        <textarea id="balancedPlayers" placeholder="例：小明,小華,小美,小強" rows="3"></textarea>
+                    </div>
+                    <button class="btn-primary" onclick="requestPairing('balanced')">產生配對</button>
+                    <div id="balancedResult" class="result-box"></div>
+                </div>
+                <div class="card">
+                    <h3>高手對決</h3>
+                    <p class="card-desc">將高手球員配對，打造精彩對戰。</p>
+                    <div class="form-group">
+                        <label for="expertPlayers">球員名單 (以逗號分隔)</label>
+                        <textarea id="expertPlayers" placeholder="例：選手A,選手B,選手C,選手D" rows="3"></textarea>
+                    </div>
+                    <button class="btn-primary" onclick="requestPairing('expert')">產生配對</button>
+                    <div id="expertResult" class="result-box"></div>
+                </div>
+                <div class="card">
+                    <h3>女子雙打</h3>
+                    <p class="card-desc">女子雙打專屬配對功能。</p>
+                    <div class="form-group">
+                        <label for="womensPlayers">球員名單 (以逗號分隔)</label>
+                        <textarea id="womensPlayers" placeholder="例：球員1,球員2,球員3,球員4" rows="3"></textarea>
+                    </div>
+                    <button class="btn-primary" onclick="requestPairing('womens-doubles')">產生配對</button>
+                    <div id="womens-doublesResult" class="result-box"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Event Modal -->
+    <div id="eventModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>新增活動</h3>
+                <button class="close-btn" onclick="closeModal('eventModal')">&times;</button>
+            </div>
+            <form id="eventForm">
+                <div class="form-group">
+                    <label for="eventName">活動名稱</label>
+                    <input type="text" id="eventName" placeholder="例：週六羽球聚會" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventDate">日期</label>
+                    <input type="date" id="eventDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventLocation">地點</label>
+                    <input type="text" id="eventLocation" placeholder="例：市立體育館" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal('eventModal')">取消</button>
+                    <button type="submit" class="btn-primary">確認新增</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Member Modal -->
+    <div id="memberModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>新增會員</h3>
+                <button class="close-btn" onclick="closeModal('memberModal')">&times;</button>
+            </div>
+            <form id="memberForm">
+                <div class="form-group">
+                    <label for="memberName">姓名</label>
+                    <input type="text" id="memberName" placeholder="輸入姓名" required>
+                </div>
+                <div class="form-group">
+                    <label for="memberEmail">Email</label>
+                    <input type="email" id="memberEmail" placeholder="輸入 Email" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal('memberModal')">取消</button>
+                    <button type="submit" class="btn-primary">確認新增</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast"></div>
+
+    <footer>
+        <p>&copy; 2026 羽球訂場系統 Badminton Booking System</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
