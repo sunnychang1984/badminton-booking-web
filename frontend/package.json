@@ -1,0 +1,9 @@
+{
+  "name": "badminton-booking-frontend",
+  "version": "1.0.0",
+  "description": "Frontend UI for badminton booking web app",
+  "scripts": {
+    "start": "npx serve -s . -l 3000",
+    "dev": "npx serve -s . -l 3000"
+  }
+}
